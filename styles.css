@@ -99,6 +99,8 @@ body {
     height: 100%;
     image-rendering: pixelated;
     transition: all 0.3s ease;
+    mix-blend-mode: multiply;
+    filter: brightness(0) invert(1) sepia(100%) saturate(10000%) hue-rotate(70deg);
 }
 
 .icon:hover {
