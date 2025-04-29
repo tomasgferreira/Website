@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Content for each icon's modal
     const iconContent = {
+        'progress-info': {
+            title: "Current Progress",
+            text: "Developing skills and knowledge in various areas of technology and business."
+        },
         education: {
             title: "Education",
             text: "Bachelor in Computer Science and Business Management"
@@ -37,10 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Voice & Audio",
             text: "Experience in audio production and voice work"
         },
-        progress: {
-            title: "Progress Tracking",
-            text: "Constantly monitoring and improving personal and professional growth"
-        },
         innovation: {
             title: "Innovation",
             text: "Always seeking new ways to solve problems and improve processes"
@@ -51,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Typing animation function
     function typeText(element, text, speed = 50) {
         let index = 0;
         element.textContent = '';
@@ -72,16 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Modal handling
-    const icons = document.querySelectorAll('.icon');
-    
-    icons.forEach(icon => {
-        icon.addEventListener('click', async () => {
-            const info = icon.getAttribute('data-info');
+    // Handle all clickable elements
+    document.addEventListener('click', async (e) => {
+        const icon = e.target.closest('.icon');
+        const progressContainer = e.target.closest('.progress-container');
+        
+        if (icon || progressContainer) {
+            const info = (icon ? icon : progressContainer).getAttribute('data-info');
             const modal = document.getElementById(`modal-${info}`);
             const modalText = modal.querySelector('.modal-text');
             
-            // Special handling for communication icon
             if (info === 'communication') {
                 document.getElementById('contact-section').scrollIntoView({ 
                     behavior: 'smooth' 
@@ -91,31 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modal.style.display = 'block';
             await typeText(modalText, iconContent[info].text);
-        });
+        }
     });
 
     // Close modals
-    document.querySelectorAll('.close-modal').forEach(closeBtn => {
-        closeBtn.addEventListener('click', () => {
-            closeBtn.closest('.modal').style.display = 'none';
-        });
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('close-modal') || 
+            e.target.classList.contains('modal')) {
+            e.target.closest('.modal').style.display = 'none';
+        }
     });
 
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
-        }
+    // Prevent modal close when clicking modal content
+    document.querySelectorAll('.modal-content').forEach(content => {
+        content.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
     });
 
     // Form handling
     const form = document.getElementById('contact-form');
-    
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Add your form submission logic here
-        // For example, sending to an email service or API
-        
         alert('Message sent successfully!');
         form.reset();
     });
@@ -136,19 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     terminal.style.display = 'block';
                 }, 1000);
             }
-        });
-    });
-
-    // Typing animation for inputs
-    const inputs = document.querySelectorAll('input, textarea');
-    
-    inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            input.style.borderColor = '#00ff00';
-        });
-        
-        input.addEventListener('blur', () => {
-            input.style.borderColor = '#00ff00';
         });
     });
 });
