@@ -1,169 +1,198 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Content for each icon's modal
-    const iconContent = {
-        education: {
-            title: "Education",
-            text: "Bachelor in Computer Science and Business Management"
-        },
-        ideas: {
-            title: "Ideas & Innovation",
-            text: "Helping parents read cooler bedtime stories"
-        },
-        communication: {
-            title: "Communication",
-            text: "Sales Representative at Philip Morris International"
-        },
-        global: {
-            title: "Global Reach",
-            text: "Working with international teams and clients"
-        },
-        work: {
-            title: "Work Experience",
-            text: "Promoter in all kinds of events"
-        },
-        tech: {
-            title: "Technology",
-            text: "Passionate about coding and new technologies"
-        },
-        fitness: {
-            title: "Fitness & Health",
-            text: "Committed to maintaining a healthy lifestyle and regular exercise"
-        },
-        chat: {
-            title: "Communication",
-            text: "Excellent interpersonal and communication skills"
-        },
-        voice: {
-            title: "Voice & Audio",
-            text: "Experience in audio production and voice work"
-        },
-        progress: {
-            title: "Progress Tracking",
-            text: "Constantly monitoring and improving personal and professional growth"
-        },
-        innovation: {
-            title: "Innovation",
-            text: "Always seeking new ways to solve problems and improve processes"
-        },
-        knowledge: {
-            title: "Knowledge",
-            text: "Continuous learner and knowledge seeker"
-        }
-    };
 
-    // Typing animation function
-    function typeText(element, text, speed = 50) {
-        let index = 0;
-        element.textContent = '';
-        element.classList.add('typing');
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tomas Ferreira - Digital Journey</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="background-pattern"></div>
 
-        return new Promise(resolve => {
-            function type() {
-                if (index < text.length) {
-                    element.textContent += text.charAt(index);
-                    index++;
-                    setTimeout(type, speed);
-                } else {
-                    element.classList.remove('typing');
-                    resolve();
-                }
-            }
-            type();
-        });
-    }
+    <main class="container">
+      <section class="hero">
+        <h1 class="main-title">Tomas Ferreira</h1>
 
-    // Modal handling
-    const icons = document.querySelectorAll('.icon');
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
+          <span class="progress-text">In Progress...</span>
+        </div>
 
-    icons.forEach(icon => {
-        icon.addEventListener('click', async () => {
-            const info = icon.getAttribute('data-info');
-            const modal = document.getElementById(`modal-${info}`);
-            const modalText = modal.querySelector('.modal-text');
+        <!-- Scattered icons -->
+        <div class="scattered-icons">
+          <div class="icon" data-info="education" style="top: 30%; left: 20%;">
+            <img src="assets/graduation-cap.png" alt="Education" />
+          </div>
+          <div class="icon" data-info="ideas" style="top: 15%; right: 25%;">
+            <img src="assets/lightbulb.png" alt="Ideas" />
+          </div>
+          <div class="icon" data-info="communication" style="top: 50%; right: 15%;">
+            <img src="assets/mobile.png" alt="Communication" />
+          </div>
+          <div class="icon" data-info="global" style="bottom: 30%; left: 25%;">
+            <img src="assets/globe.png" alt="Global" />
+          </div>
+          <div class="icon" data-info="work" style="bottom: 20%; right: 30%;">
+            <img src="assets/briefcase.png" alt="Work" />
+          </div>
+          <div class="icon" data-info="tech" style="top: 40%; left: 40%;">
+            <img src="assets/computer.png" alt="Technology" />
+          </div>
+          <div class="icon" data-info="fitness" style="top: 25%; right: 35%;">
+            <img src="assets/dumbbell.png" alt="Fitness" />
+          </div>
+          <div class="icon" data-info="chat" style="bottom: 35%; right: 20%;">
+            <img src="assets/chat.png" alt="Chat" />
+          </div>
+          <div class="icon" data-info="voice" style="top: 45%; left: 30%;">
+            <img src="assets/microphone.png" alt="Voice" />
+          </div>
+          <div class="icon" data-info="progress" style="bottom: 25%; left: 35%;">
+            <img src="assets/progress.png" alt="Progress" />
+          </div>
+          <div class="icon" data-info="innovation" style="top: 20%; left: 25%;">
+            <img src="assets/rocket.png" alt="Innovation" />
+          </div>
+          <div class="icon" data-info="knowledge" style="bottom: 40%; right: 25%;">
+            <img src="assets/book.png" alt="Knowledge" />
+          </div>
+        </div>
+      </section>
 
-            // Special handling for communication icon
-            if (info === 'communication') {
-                document.getElementById('contact-section').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-                return;
-            }
+      <section class="contact" id="contact-section">
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-title">Contact Terminal</span>
+            <div class="terminal-controls">
+              <span class="control minimize">-</span>
+              <span class="control maximize">□</span>
+              <span class="control close">×</span>
+            </div>
+          </div>
+          <div class="terminal-body">
+            <form id="contact-form">
+              <div class="input-group">
+                <label for="name">NAME:</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+              <div class="input-group">
+                <label for="email">EMAIL:</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div class="input-group">
+                <label for="message">MESSAGE:</label>
+                <textarea id="message" name="message" required></textarea>
+              </div>
+              <button type="submit" class="submit-btn">SEND_MESSAGE</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
 
-            modal.style.display = 'block';
-            await typeText(modalText, iconContent[info].text);
-        });
-    });
+    <!-- Individual modals for each icon -->
+    <div class="modal" id="modal-education">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Education</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    // Close modals
-    document.querySelectorAll('.close-modal').forEach(closeBtn => {
-        closeBtn.addEventListener('click', () => {
-            closeBtn.closest('.modal').style.display = 'none';
-        });
-    });
+    <div class="modal" id="modal-ideas">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Ideas & Innovation</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
-        }
-    });
+    <div class="modal" id="modal-communication">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Communication</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    // Form handling
-    const form = document.getElementById('contact-form');
+    <div class="modal" id="modal-global">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Global Reach</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    <div class="modal" id="modal-work">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Work Experience</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-        // Add your form submission logic here
-        alert('Message sent successfully!');
-        form.reset();
-    });
+    <div class="modal" id="modal-tech">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Technology</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    // Terminal controls functionality
-    const controls = document.querySelectorAll('.control');
-    const terminal = document.querySelector('.terminal');
+    <div class="modal" id="modal-fitness">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Fitness & Health</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    controls.forEach(control => {
-        control.addEventListener('click', () => {
-            if (control.classList.contains('minimize')) {
-                terminal.style.transform = 'scale(0.8)';
-            } else if (control.classList.contains('maximize')) {
-                terminal.style.transform = 'scale(1)';
-            } else if (control.classList.contains('close')) {
-                terminal.style.display = 'none';
-                setTimeout(() => {
-                    terminal.style.display = 'block';
-                }, 1000);
-            }
-        });
-    });
+    <div class="modal" id="modal-chat">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Communication</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    // Typing animation for inputs
-    const inputs = document.querySelectorAll('input, textarea');
+    <div class="modal" id="modal-voice">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Voice & Audio</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            input.style.borderColor = '#00ff00';
-        });
+    <div class="modal" id="modal-progress">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Progress Tracking</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-        input.addEventListener('blur', () => {
-            input.style.borderColor = '#00ff00';
-        });
-    });
+    <div class="modal" id="modal-innovation">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Innovation</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-    // Scroll trigger for showing the contact form
-    window.addEventListener('scroll', () => {
-        const contactForm = document.querySelector('.terminal');
-        const scrollPosition = window.scrollY + window.innerHeight;
-        const formPosition = contactForm.offsetTop;
+    <div class="modal" id="modal-knowledge">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">Knowledge</h2>
+        <div class="modal-text"></div>
+      </div>
+    </div>
 
-        if (scrollPosition > formPosition) {
-            contactForm.classList.add('show-contact-form');
-        }
-    });
-
-    // Progress Bar Modal activation
-    document.querySelector('.progress-bar').addEventListener('click', () => {
-        const modal = document.getElementById('modal-progress');
-        modal.style.display = 'block';
-    });
-});
+    <script src="script.js"></script>
+  </body>
+</html>
