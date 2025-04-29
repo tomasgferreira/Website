@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Ideas & Innovation",
             text: "Helping parents read cooler bedtime stories"
         },
+        mobile: {
+            title: "Contact Form",
+            text: "Scroll down to the contact form below"
+        },
         communication: {
             title: "Communication",
             text: "Sales Representative at Philip Morris International"
@@ -50,6 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Create modals dynamically for all icons
+    Object.keys(iconContent).forEach(key => {
+        const modalHTML = `
+            <div id="modal-${key}" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2 class="modal-title">${iconContent[key].title}</h2>
+                    <p class="modal-text"></p>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    });
+
     function typeText(element, text, speed = 50) {
         let index = 0;
         element.textContent = '';
@@ -77,33 +95,40 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (icon || progressContainer) {
             const info = (icon ? icon : progressContainer).getAttribute('data-info');
-            const modal = document.getElementById(`modal-${info}`);
-            const modalText = modal.querySelector('.modal-text');
             
-            if (info === 'communication') {
+            if (info === 'mobile') {
                 document.getElementById('contact-section').scrollIntoView({ 
                     behavior: 'smooth' 
                 });
                 return;
             }
 
-            modal.style.display = 'block';
-            await typeText(modalText, iconContent[info].text);
+            const modal = document.getElementById(`modal-${info}`);
+            if (modal) {
+                const modalText = modal.querySelector('.modal-text');
+                modal.style.display = 'block';
+                await typeText(modalText, iconContent[info].text);
+            }
         }
     });
 
     // Close modals
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('close-modal') || 
-            e.target.classList.contains('modal')) {
-            e.target.closest('.modal').style.display = 'none';
-        }
+    document.querySelectorAll('.close-modal').forEach(closeBtn => {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modal = e.target.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
     });
 
-    // Prevent modal close when clicking modal content
-    document.querySelectorAll('.modal-content').forEach(content => {
-        content.addEventListener('click', (e) => {
-            e.stopPropagation();
+    // Close modal when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
         });
     });
 
