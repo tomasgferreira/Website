@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         global: {
             title: "Global Reach",
-            text: "Working with international teams and clients"
+            text: "Working with international teams and clissssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssents"
         },
         work: {
             title: "Work Experience",
