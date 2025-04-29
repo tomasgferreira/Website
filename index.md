@@ -11,7 +11,7 @@
     <div class="background-pattern"></div>
     
     <main class="container">
-        <h1 class="main-title">Tomas Ferreira</h1>
+        <h1 class="main-title">Tomás Ferreira</h1>
         
         <div class="progress-section">
             <span class="progress-text">In Progress...</span>
