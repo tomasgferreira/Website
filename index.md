@@ -11,76 +11,52 @@
     <div class="background-pattern"></div>
     
     <main class="container">
-        <section class="hero">
-            <h1 class="main-title">Tomas Ferreira</h1>
-            
-            <div class="progress-container">
+        <h1 class="main-title">Tomas Ferreira</h1>
+        
+        <div class="progress-section">
+            <span class="progress-text">In Progress...</span>
+            <div class="progress-container" data-info="progress-info">
                 <div class="progress-bar">
                     <div class="progress"></div>
                 </div>
-                <span class="progress-text">In Progress...</span>
             </div>
+        </div>
 
-            <!-- Scattered icons -->
-            <div class="scattered-icons">
-                <div class="icon" data-info="education" style="top: 30%; left: 20%;">
-                    <img src="assets/graduation-cap.png" alt="Education">
-                </div>
-                <div class="icon" data-info="ideas" style="top: 15%; right: 25%;">
-                    <img src="assets/lightbulb.png" alt="Ideas">
-                </div>
-                <div class="icon" data-info="communication" style="top: 50%; right: 15%;">
-                    <img src="assets/mobile.png" alt="Communication">
-                </div>
-                <div class="icon" data-info="global" style="bottom: 30%; left: 25%;">
-                    <img src="assets/globe.png" alt="Global">
-                </div>
-                <div class="icon" data-info="work" style="bottom: 20%; right: 30%;">
-                    <img src="assets/briefcase.png" alt="Work">
-                </div>
-                <div class="icon" data-info="tech" style="top: 40%; left: 40%;">
-                    <img src="assets/computer.png" alt="Technology">
-                </div>
-                <div class="icon" data-info="fitness" style="top: 25%; right: 35%;">
-                    <img src="assets/dumbbell.png" alt="Fitness">
-                </div>
-                <div class="icon" data-info="chat" style="bottom: 35%; right: 20%;">
-                    <img src="assets/chat.png" alt="Chat">
-                </div>
-                <div class="icon" data-info="voice" style="top: 45%; left: 30%;">
-                    <img src="assets/microphone.png" alt="Voice">
-                </div>
-                <div class="icon" data-info="progress" style="bottom: 25%; left: 35%;">
-                    <img src="assets/progress.png" alt="Progress">
-                </div>
-                <div class="icon" data-info="innovation" style="top: 20%; left: 25%;">
-                    <img src="assets/rocket.png" alt="Innovation">
-                </div>
-                <div class="icon" data-info="knowledge" style="bottom: 40%; right: 25%;">
-                    <img src="assets/book.png" alt="Knowledge">
-                </div>
-
-                <div class="icon" data-info="education" style="top: 30%; left: 20%;">
-                    <img src="assets/graduation-cap.png" alt="Education">
-                </div>
-                <div class="icon" data-info="ideas" style="top: 15%; right: 25%;">
-                    <img src="assets/lightbulb.png" alt="Ideas">
-                </div>
-                <div class="icon" data-info="communication" style="top: 50%; right: 15%;">
-                    <img src="assets/phone.png" alt="Communication">
-                </div>
-                <div class="icon" data-info="global" style="bottom: 30%; left: 25%;">
-                    <img src="assets/globe.png" alt="Global">
-                </div>
-                <div class="icon" data-info="work" style="bottom: 20%; right: 30%;">
-                    <img src="assets/briefcase.png" alt="Work">
-                </div>
-                
-                <div class="icon" data-info="tech" style="top: 40%; left: 40%;">
-                    <img src="assets/computer.png" alt="Technology">
-                </div>
+        <div class="icons-container">
+            <div class="icon" data-info="education" style="--x: 20; --y: 15;">
+                <img src="assets/graduation-cap.png" alt="Education">
             </div>
-        </section>
+            <div class="icon" data-info="ideas" style="--x: 80; --y: 25;">
+                <img src="assets/lightbulb.png" alt="Ideas">
+            </div>
+            <div class="icon" data-info="communication" style="--x: 65; --y: 75;">
+                <img src="assets/mobile.png" alt="Communication">
+            </div>
+            <div class="icon" data-info="global" style="--x: 35; --y: 60;">
+                <img src="assets/globe.png" alt="Global">
+            </div>
+            <div class="icon" data-info="work" style="--x: 75; --y: 45;">
+                <img src="assets/briefcase.png" alt="Work">
+            </div>
+            <div class="icon" data-info="tech" style="--x: 45; --y: 35;">
+                <img src="assets/computer.png" alt="Technology">
+            </div>
+            <div class="icon" data-info="fitness" style="--x: 15; --y: 85;">
+                <img src="assets/dumbbell.png" alt="Fitness">
+            </div>
+            <div class="icon" data-info="chat" style="--x: 85; --y: 65;">
+                <img src="assets/chat.png" alt="Chat">
+            </div>
+            <div class="icon" data-info="voice" style="--x: 25; --y: 40;">
+                <img src="assets/microphone.png" alt="Voice">
+            </div>
+            <div class="icon" data-info="innovation" style="--x: 55; --y: 20;">
+                <img src="assets/rocket.png" alt="Innovation">
+            </div>
+            <div class="icon" data-info="knowledge" style="--x: 40; --y: 70;">
+                <img src="assets/book.png" alt="Knowledge">
+            </div>
+        </div>
 
         <section class="contact" id="contact-section">
             <div class="terminal">
@@ -113,7 +89,15 @@
         </section>
     </main>
 
-    <!-- Individual modals for each icon -->
+    <!-- Modals -->
+    <div class="modal" id="modal-progress-info">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Current Progress</h2>
+            <div class="modal-text"></div>
+        </div>
+    </div>
+
     <div class="modal" id="modal-education">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -126,14 +110,6 @@
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h2 class="modal-title">Ideas & Innovation</h2>
-            <div class="modal-text"></div>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-communication">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 class="modal-title">Communication</h2>
             <div class="modal-text"></div>
         </div>
     </div>
@@ -162,7 +138,6 @@
         </div>
     </div>
 
-
     <div class="modal" id="modal-fitness">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -183,14 +158,6 @@
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h2 class="modal-title">Voice & Audio</h2>
-            <div class="modal-text"></div>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-progress">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 class="modal-title">Progress Tracking</h2>
             <div class="modal-text"></div>
         </div>
     </div>
