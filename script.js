@@ -54,14 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // Typing animation function
+    // Typing animation function with cancel support
     function typeText(element, text, speed = 20) {
         let index = 0;
         element.innerHTML = '';
         element.classList.add('typing');
 
+        // Cancel previous animation if any
+        if (element._typingCancel) {
+            element._typingCancel();
+        }
+        let cancelled = false;
+        element._typingCancel = () => { cancelled = true; };
+
         return new Promise(resolve => {
             function type() {
+                if (cancelled) {
+                    element.classList.remove('typing');
+                    return resolve();
+                }
                 if (index < text.length) {
                     if (text.charAt(index) === '\n') {
                         element.innerHTML += '<br>';
@@ -140,12 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close modals
     document.querySelectorAll('.close-modal').forEach(closeBtn => {
         closeBtn.addEventListener('click', () => {
-            closeBtn.closest('.modal').style.display = 'none';
+            const modal = closeBtn.closest('.modal');
+            // Cancel typing animation if running
+            const modalText = modal.querySelector('.modal-text');
+            if (modalText && modalText._typingCancel) {
+                modalText._typingCancel();
+            }
+            modal.style.display = 'none';
         });
     });
 
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
+            // Cancel typing animation if running
+            const modalText = e.target.querySelector('.modal-text');
+            if (modalText && modalText._typingCancel) {
+                modalText._typingCancel();
+            }
             e.target.style.display = 'none';
         }
     });
