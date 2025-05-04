@@ -56,28 +56,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Typing animation function
     function typeText(element, text, speed = 20) {
-        let index = 0;
-        element.innerHTML = '';
-        element.classList.add('typing');
+    element.innerHTML = '';
+    element.classList.add('typing');
+    const paragraphs = text.split('\n\n');
+    let pIndex = 0, charIndex = 0;
 
-        return new Promise(resolve => {
-            function type() {
-                if (index < text.length) {
-                    if (text.charAt(index) === '\n') {
-                        element.innerHTML += '<br>';
-                    } else {
-                        element.innerHTML += text.charAt(index);
-                    }
-                    index++;
-                    setTimeout(type, speed);
+    function typeParagraph() {
+        if (pIndex >= paragraphs.length) {
+            element.classList.remove('typing');
+            return;
+        }
+        let p = document.createElement('p');
+        element.appendChild(p);
+
+        function typeChar() {
+            if (charIndex < paragraphs[pIndex].length) {
+                if (paragraphs[pIndex][charIndex] === '\n') {
+                    p.innerHTML += '<br>';
                 } else {
-                    element.classList.remove('typing');
-                    resolve();
+                    p.innerHTML += paragraphs[pIndex][charIndex];
                 }
+                charIndex++;
+                setTimeout(typeChar, speed);
+            } else {
+                pIndex++;
+                charIndex = 0;
+                typeParagraph();
             }
-            type();
-        });
+        }
+        typeChar();
     }
+    return new Promise(resolve => {
+        function finish() {
+            element.classList.remove('typing');
+            resolve();
+        }
+        typeParagraph();
+        setTimeout(finish, speed * text.length + 100); // fallback in case
+    });
+}
 
     // Initialize terminal
     const terminal = document.querySelector('.terminal');
