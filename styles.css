@@ -510,8 +510,9 @@ textarea {
     width: 100%;
   }
   .icon-row {
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 0.5rem;
   }
   .terminal {
     margin-left: auto;
