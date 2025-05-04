@@ -55,15 +55,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Typing animation function
-    function typeText(element, text, speed =15) {
+    function typeText(element, text, speed = 20) {
         let index = 0;
-        element.textContent = '';
+        element.innerHTML = '';
         element.classList.add('typing');
 
         return new Promise(resolve => {
             function type() {
                 if (index < text.length) {
-                    element.textContent += text.charAt(index);
+                    if (text.charAt(index) === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += text.charAt(index);
+                    }
                     index++;
                     setTimeout(type, speed);
                 } else {
