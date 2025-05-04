@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Typing animation function
-    function typeText(element, text, speed =20) {
+    function typeText(element, text, speed =15) {
         let index = 0;
         element.textContent = '';
         element.classList.add('typing');
