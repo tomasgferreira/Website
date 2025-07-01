@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalTitle = modal.querySelector('.modal-title');
             modalTitle.textContent = "What's in Progress";
             modal.style.display = 'block';
-            await typeText(modalText, "Currently working on:\n\n- Challenging myself to test 8 weeks 8 ideas, do you the guts to do it with me?\n\n- Exploring AI and automation\n\n- Closing deals as a sales representative");
+            await typeText(modalText, "Currently working on:\n\n- Challenging myself to test 8 ideas in 8 weeks, do you the guts to do it with me?\n\n- Exploring AI and automation");
         }
     });
 
