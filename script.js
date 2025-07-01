@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconContent = {
         education: {
             title: "Education",
-            text: "Bachelor in Computer Science and Business Management at ISCTE\n\nDid a sprint at Unicorn Factory, pitched ideas faster than you can say startup"
+            text: "Bachelor in Computer Science and Business Management at ISCTE\n\nDid a sprint at Unicorn Factory, pitched ideas faster than you can say startup\n\nCertificate in a course AI for Product & Automation by Code for All"
         },
         ideas: {
             title: "Ideas & Innovation",
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         progress: {
             title: "Progress Tracking",
-            text: "Passionate about tackling interesting challenges\n\nI like to learn directly from people who've done interesting, real-world things\n\nMy north star is to immerse in meaningful ventures that can challenge me to scale faster\n\nI'm a work in progress, just like you"
+            text: "Passionate about tackling interesting challenges\n\nI like to learn directly from people who've done interesting, real-world things\n\nMy north star is to immerse in meaningful ventures that can challenge me to scale faster\n\nI'm a work in progress, like you"
         },
         innovation: {
             title: "Innovation",
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         knowledge: {
             title: "Bookshelf",
-            text: "Currently reading:\n\n- Psychology of selling - Brian Tracy\n\nBooks = brain food. Currently overeating"
+            text: "Currently reading:\n\n- Discipline Is Destiny - Ryan Holiday\n\nBooks = brain food. Currently overeating"
         }
     };
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalTitle = modal.querySelector('.modal-title');
             modalTitle.textContent = "What's in Progress";
             modal.style.display = 'block';
-            await typeText(modalText, "Currently working on:\n\n- Wrapping up my bachelor's in Computer Science and Business Management\n\n- Closing deals as a sales representative\n\n- Exploring AI and automation\n\n- Helping parents read cooler bedtime stories");
+            await typeText(modalText, "Currently working on:\n\n- Challenging myself to test 8 weeks 8 ideas, do you the guts to do it with me?\n\n- Exploring AI and automation\n\n- Closing deals as a sales representative");
         }
     });
 
