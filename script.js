@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         communication: {
             title: "Communication",
-            text: "Let's connect here:\n\nLinkedIn - Tomasgferreira\n\nGitHub - Tomasgferreira\n\nGitHub - Tomoconstrutor"
+            text: "LinkedIn - Tomasgferreira\n\nGitHub - Tomasgferreira\n\nGitHub - Tomoconstrutor"
         },
         global: {
             title: "Vacation Overdrive",
