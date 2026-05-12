@@ -2,7 +2,7 @@
     var posthogProjectKey = 'phc_oS7LemiNrfiztM7zgphsJdhEHafPuGkKoqJaxgpHB53E';
     var posthogHost = 'https://us.i.posthog.com';
 
-    if (!posthogProjectKey || posthogProjectKey.indexOf('phc_oS7LemiNrfiztM7zgphsJdhEHafPuGkKoqJaxgpHB53E') !== -1) {
+    if (!posthogProjectKey || posthogProjectKey.indexOf('REPLACE_WITH_YOUR_PROJECT_KEY') !== -1) {
         return;
     }
 
