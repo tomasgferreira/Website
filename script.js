@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         communication: {
             title: "Communication",
-            text: "Sales Representative at Philip Morris International"
+            text: "Let's connect here:\n\nLinkedIn - Tomasgferreira\n\nGitHub - Tomasgferreira\n\nGitHub - Tomoconstrutor"
         },
         global: {
             title: "Vacation Overdrive",
@@ -114,24 +114,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     };
 
+    function enhanceCommunicationContent(modalText) {
+        const linkedText = modalText.innerHTML
+            .replace(
+                'LinkedIn - Tomasgferreira',
+                'LinkedIn - <a href="https://www.linkedin.com/in/tomasgferreira" target="_blank" rel="noopener noreferrer">Tomasgferreira</a>'
+            )
+            .replace(
+                'GitHub - Tomasgferreira',
+                'GitHub - <a href="https://github.com/tomasgferreira" target="_blank" rel="noopener noreferrer">Tomasgferreira</a>'
+            )
+            .replace(
+                'GitHub - Tomoconstrutor',
+                'GitHub - <a href="https://github.com/tomoconstrutor" target="_blank" rel="noopener noreferrer">Tomoconstrutor</a>'
+            );
+
+        modalText.innerHTML = `${linkedText}<br><br><button type="button" class="contact-scroll-btn">Click here to contact me</button>`;
+    }
+
     // Handle all clickable elements
     document.addEventListener('click', async (e) => {
+        const contactButton = e.target.closest('.contact-scroll-btn');
+        if (contactButton) {
+            const modal = contactButton.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            scrollToContact();
+            return;
+        }
+
         const icon = e.target.closest('.icon');
         const progressContainer = e.target.closest('.progress-container');
         
         if (icon || progressContainer) {
             const info = (icon ? icon : progressContainer).getAttribute('data-info');
-            
-            if (info === 'communication') {
-                scrollToContact();
-                return;
-            }
 
             const modal = document.getElementById(`modal-${info}`);
             if (modal) {
                 const modalText = modal.querySelector('.modal-text');
                 modal.style.display = 'block';
                 await typeText(modalText, iconContent[info].text);
+
+                if (info === 'communication') {
+                    enhanceCommunicationContent(modalText);
+                }
             }
         }
     });

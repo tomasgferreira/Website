@@ -311,6 +311,35 @@ textarea {
     overflow-y: auto;
 }
 
+.modal-text a {
+    color: #00ff00;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.modal-text a:hover {
+    color: #8bff8b;
+}
+
+.contact-scroll-btn {
+    margin-top: 0.5rem;
+    background: transparent;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-scroll-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.45);
+}
+
 /* Scrollbar styling for modal text */
 .modal-text::-webkit-scrollbar {
     width: 8px;
