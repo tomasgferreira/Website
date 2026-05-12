@@ -16,7 +16,7 @@
 .ee-name-input {
     position: absolute;
     left: 50%;
-    top: 70%;
+    top: 80%;
     transform: translateX(-50%);
     width: min(420px, 86vw);
     background: rgba(0, 0, 0, 0.55);

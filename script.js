@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         voice: {
             title: "Voice & Audio",
-            text: "Hearing Diet\n\nI listen to a lot of podcasts\n\nMy First Million\nModern Wisdom\nThe AI Daily Brief\nBecoming The Main character\nStarter Story\n\nUsually at 2x speed\nEfficient or mildly concerning. Not sure yet"
+            text: "I listen to a lot of podcasts\n\nMy First Million\nModern Wisdom\nThe AI Daily Brief\nBecoming The Main character\nStarter Story\n\nUsually at 2x speed\nEfficient or mildly concerning. Not sure yet"
         },
         progress: {
             title: "Progress Tracking",
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         innovation: {
             title: "Innovation",
-            text: "Most difficult question you can ask me: what's my favorite car?\n\nIdentifying cars on sight (my weirdest party trick)\n\nMy girlfriend's patience is tested regularly when nice cars pass by"
+            text: "Most difficult question you can ask me: what's my favorite car?\n\nIdentifying cars on sight (my weirdest party trick)\n\nMy girlfriend's patience is tested regularly when nice cars pass by\n\nI dare you to type the brand of the car you just clicked"
         },
         knowledge: {
             title: "Bookshelf",

@@ -6,6 +6,9 @@
     var GLITCH_DURATION_MS = 800;
     var MOBILE_BREAKPOINT = 768;
     var TOTAL_LAPS = 3;
+    var MIN_LAP_MS = 8000;
+    var MIN_LAP_PROGRESS_RATIO = 0.68;
+    var SPLINE_TENSION = 0.65;
     var LEADERBOARD_VISIBLE_MS = 7000;
     var INTRO_VISIBLE_MS = 2200;
     var SUPABASE_CDN_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
@@ -16,11 +19,22 @@
     // Supabase anon key.
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnZm5zaHJxcWRid2VtenhvcnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTkzMzksImV4cCI6MjA5NDE3NTMzOX0.7UR0-4N5OpPwyXmR5MDWBn3J0qRmgynlEt-MDaJkXB4';
 
+    // Dense contour traced from the red outline, tuned for "smoothed but close".
     var TRACK_WAYPOINTS = [
-        [0.08, 0.30], [0.18, 0.20], [0.35, 0.16], [0.50, 0.24],
-        [0.62, 0.16], [0.79, 0.17], [0.92, 0.27], [0.90, 0.47],
-        [0.84, 0.65], [0.70, 0.78], [0.50, 0.84], [0.33, 0.80],
-        [0.22, 0.66], [0.14, 0.56], [0.09, 0.46], [0.08, 0.30]
+        [0.060, 0.505], [0.052, 0.460], [0.048, 0.415], [0.050, 0.365], [0.058, 0.315],
+        [0.074, 0.268], [0.100, 0.226], [0.132, 0.194], [0.170, 0.173], [0.210, 0.160],
+        [0.252, 0.154], [0.292, 0.154], [0.332, 0.156], [0.362, 0.172], [0.385, 0.205],
+        [0.404, 0.248], [0.423, 0.296], [0.447, 0.347], [0.477, 0.392], [0.509, 0.422],
+        [0.541, 0.423], [0.569, 0.399], [0.593, 0.357], [0.611, 0.308], [0.632, 0.256],
+        [0.657, 0.213], [0.690, 0.183], [0.731, 0.168], [0.772, 0.162], [0.815, 0.158],
+        [0.856, 0.169], [0.892, 0.198], [0.921, 0.239], [0.943, 0.287], [0.955, 0.338],
+        [0.960, 0.392], [0.960, 0.450], [0.960, 0.512], [0.964, 0.578], [0.968, 0.648],
+        [0.968, 0.718], [0.960, 0.781], [0.944, 0.835], [0.918, 0.876], [0.882, 0.903],
+        [0.839, 0.918], [0.792, 0.926], [0.744, 0.928], [0.698, 0.929], [0.653, 0.929],
+        [0.607, 0.929], [0.560, 0.931], [0.512, 0.933], [0.468, 0.933], [0.424, 0.929],
+        [0.382, 0.920], [0.346, 0.900], [0.321, 0.868], [0.304, 0.823], [0.293, 0.769],
+        [0.281, 0.715], [0.266, 0.666], [0.245, 0.628], [0.214, 0.603], [0.176, 0.588],
+        [0.138, 0.578], [0.103, 0.568], [0.076, 0.548], [0.060, 0.505]
     ];
 
     var CAR_PATTERN = [
@@ -164,7 +178,9 @@
             nearestTrackIndex: 0,
             prevTrackIndex: 0,
             progressTracker: 0,
+            lapProgressForward: 0,
             lapArmed: false,
+            prevGateSignedDistance: null,
             wrongWayMs: 0,
             wrongWayFlashUntil: 0,
             offTrackFlashUntil: 0,
@@ -405,26 +421,55 @@
                 delta += len;
             }
             state.progressTracker += delta;
+            if (delta > 0) {
+                state.lapProgressForward += delta;
+            }
             state.prevTrackIndex = currentIndex;
         }
 
         function updateLapDetection(ts, directionDot) {
             var track = state.track;
             var startPoint = track.points[0];
+            var startTangent = track.tangents[0];
+            var startNormalX = -startTangent.y;
+            var startNormalY = startTangent.x;
             var gateDistance = clamp(canvas.width / 1920 * 40, 26, 62);
             var distToStart = distance(state.car.x, state.car.y, startPoint.x, startPoint.y);
+            var currentGateSignedDistance =
+                (state.car.x - startPoint.x) * startNormalX +
+                (state.car.y - startPoint.y) * startNormalY;
 
             if (distToStart > track.trackWidth * 0.8) {
                 state.lapArmed = true;
             }
 
+            var crossedGateFromExpectedSide = false;
+            if (state.prevGateSignedDistance !== null) {
+                crossedGateFromExpectedSide =
+                    state.prevGateSignedDistance < -2 &&
+                    currentGateSignedDistance >= 2;
+            }
+            state.prevGateSignedDistance = currentGateSignedDistance;
+
             var isNearGate = distToStart <= gateDistance;
-            if (state.lapArmed && isNearGate && directionDot > 0.2) {
+            var minProgress = track.points.length * MIN_LAP_PROGRESS_RATIO;
+            var enoughProgress = state.lapProgressForward >= minProgress;
+            var enoughTime = (ts - state.lapStartTs) >= MIN_LAP_MS;
+
+            if (
+                state.lapArmed &&
+                isNearGate &&
+                crossedGateFromExpectedSide &&
+                directionDot > 0.2 &&
+                enoughProgress &&
+                enoughTime
+            ) {
                 state.currentLap += 1;
                 var split = ts - state.lapStartTs;
                 state.lapSplits.push(split);
                 state.lapStartTs = ts;
                 state.lapArmed = false;
+                state.lapProgressForward = 0;
 
                 if (state.currentLap >= TOTAL_LAPS) {
                     finishRace(ts);
@@ -662,11 +707,11 @@
             drawText(
                 'ENTER YOUR NAME:',
                 canvas.width / 2 - 230,
-                canvas.height * 0.62,
+                canvas.height * 0.72,
                 16,
                 '#8bff8b'
             );
-            drawText('> ', canvas.width / 2 - 230, canvas.height * 0.68, 14, COLORS.green);
+            drawText('> ', canvas.width / 2 - 230, canvas.height * 0.78, 14, COLORS.green);
         }
 
         function renderLoadingScreen() {
@@ -975,8 +1020,8 @@
         }
 
         function drawMiniMap() {
-            var width = 118;
-            var height = 66;
+            var width = 154;
+            var height = 58;
             var pad = 18;
             var boxX = canvas.width - width - pad;
             var boxY = canvas.height - height - 42;
@@ -1305,7 +1350,7 @@
         function buildTrack() {
             var width = canvas.width;
             var height = canvas.height;
-            var points = generateTrackPoints(width, height, 320);
+            var points = generateTrackPoints(width, height, 420);
             var tangents = computeTangents(points);
             var bounds = computeBounds(points);
             var trackWidth = clamp(width * (90 / 1920), 50, 132);
@@ -1336,10 +1381,12 @@
             state.nearestTrackIndex = 0;
             state.prevTrackIndex = 0;
             state.progressTracker = 0;
+            state.lapProgressForward = 0;
             state.currentLap = 0;
             state.lapSplits = [];
             state.raceStarted = false;
             state.lapArmed = false;
+            state.prevGateSignedDistance = null;
             state.particles = [];
         }
 
@@ -1364,7 +1411,7 @@
             });
 
             var splinePoints = [];
-            var segments = 28;
+            var segments = 16;
             for (var i = 0; i < waypoints.length; i++) {
                 var p0 = waypoints[(i - 1 + waypoints.length) % waypoints.length];
                 var p1 = waypoints[i];
@@ -1383,19 +1430,22 @@
         function catmullRom(p0, p1, p2, p3, t) {
             var t2 = t * t;
             var t3 = t2 * t;
+            var s = (1 - SPLINE_TENSION) / 2;
             return {
-                x: 0.5 * (
-                    (2 * p1.x) +
-                    (-p0.x + p2.x) * t +
-                    (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
-                    (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3
-                ),
-                y: 0.5 * (
-                    (2 * p1.y) +
-                    (-p0.y + p2.y) * t +
-                    (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
-                    (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3
-                )
+                x:
+                    (
+                        (-s * p0.x + (2 - s) * p1.x + (s - 2) * p2.x + s * p3.x) * t3 +
+                        (2 * s * p0.x + (s - 3) * p1.x + (3 - 2 * s) * p2.x - s * p3.x) * t2 +
+                        (-s * p0.x + s * p2.x) * t +
+                        p1.x
+                    ),
+                y:
+                    (
+                        (-s * p0.y + (2 - s) * p1.y + (s - 2) * p2.y + s * p3.y) * t3 +
+                        (2 * s * p0.y + (s - 3) * p1.y + (3 - 2 * s) * p2.y - s * p3.y) * t2 +
+                        (-s * p0.y + s * p2.y) * t +
+                        p1.y
+                    )
             };
         }
 
