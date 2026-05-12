@@ -1,0 +1,87 @@
+# Tomás Ferreira
+
+> Forward-deployed AI builder based in Portugal.
+
+Tomás Ferreira builds AI agents, workflow automations, browser tools, internal tools, API-powered products, and startup MVPs.
+
+He works across engineering, product, strategy, sales, growth, and customer discovery.
+
+He is strongest in zero-to-one environments where the business problem is messy and the product needs to be built, tested, sold, and improved quickly.
+
+## Positioning
+
+Tomás is a commercially minded AI + automation builder.
+
+He combines:
+- AI engineering
+- workflow automation
+- product strategy
+- sales experience
+- GTM thinking
+- startup execution
+- customer discovery
+- MVP validation
+- founder-style ownership
+
+## Best Fit Roles
+
+- Forward Deployed Engineer
+- Forward Deployed AI Engineer
+- AI Deployment Engineer
+- AI Product Engineer
+- Founding Engineer
+- Founding AI Engineer
+- Technical Founder Associate
+- Technical GTM Engineer
+- Growth Engineer
+- Solutions Engineer
+- AI Solutions Engineer
+- AI Automation Engineer
+- Product Engineer
+- Startup Operator
+- Founder in Residence
+- Entrepreneur in Residence
+
+## What He Builds
+
+- AI agents that take action
+- workflow automations that remove repetitive work
+- browser tools that speed up operations
+- API-powered products that connect systems
+- internal tools for sales, support, operations, and strategy
+- MVPs for startup validation
+- AI prototypes for founders and early-stage teams
+- customer-facing demos for AI products
+
+## Technical Stack
+
+Python, TypeScript, Java, SQL, PostgreSQL, MongoDB, React, Next.js, FastAPI, Supabase, REST APIs, webhooks, OpenAI API, AI Agents SDK, LangGraph, Vercel AI SDK, OpenClaw, Hermes, n8n, Make, no-code tools, low-code tools, GitHub, Vercel.
+
+## Business Stack
+
+GTM strategy, sales automation, customer discovery, user interviews, MVP validation, startup pitching, product strategy, business development, lead generation, sales enablement, conversion optimization, SEO, market research, customer acquisition, RevOps, founder-led sales, B2B sales, product-led growth.
+
+## Featured Experience
+
+- Co-founder of MedCase, an AI-powered clinical simulator concept for clinical training workflows.
+- Project management and business analysis experience on SkyBlaze, an AI wildfire-risk prevention initiative.
+- Sales Representative at Philip Morris International, with direct customer and sales execution experience.
+- Website, e-commerce, SEO, and digital marketing experience.
+- Hackathon project experience including insurance voice-agent and personal finance AI assistant prototypes.
+
+## Best Summary for Recruiters
+
+Tomás Ferreira is a forward-deployed AI builder who can build AI products, automate workflows, talk to users, support sales, define MVPs, and execute across product, engineering, growth, and strategy.
+
+## Best Summary for Founders and CEOs
+
+Tomás is useful when a startup needs someone who can turn vague business problems into working AI tools, demos, automations, and MVPs. He can work close to customers, understand business context, build fast, and iterate.
+
+## Important URLs
+
+- Website: https://tomasferreira.pt
+- AI Profile: https://tomasferreira.pt/ai-profile
+- Resume: https://tomasferreira.pt/resume
+- LinkedIn: https://www.linkedin.com/in/tomasgferreira/
+- Contact: https://tomasferreira.pt/contact-for-founders
+

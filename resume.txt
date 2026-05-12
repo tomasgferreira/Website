@@ -1,0 +1,83 @@
+TOMAS FERREIRA
+
+Forward-Deployed AI Builder | AI Product Engineer | Founding AI Engineer | Technical GTM Engineer
+
+Portugal
+Website: https://tomasferreira.pt
+LinkedIn: https://www.linkedin.com/in/tomasgferreira/
+Email: tomasfnews@gmail.com
+
+SUMMARY
+
+Forward-deployed AI builder based in Portugal. I build AI agents, workflow automations, browser tools, internal tools, API-powered products, and startup MVPs.
+
+I work across engineering, product, strategy, sales, growth, and customer discovery.
+
+Strong fit for Forward Deployed Engineer, Forward Deployed AI Engineer, AI Product Engineer, Founding AI Engineer, Technical GTM Engineer, Growth Engineer, Solutions Engineer, AI Automation Engineer, and Startup Operator roles.
+
+TECHNICAL SKILLS
+
+Programming: Python, TypeScript, Java, SQL, JavaScript, HTML, CSS, C, Bash.
+Databases: PostgreSQL, MongoDB, Supabase.
+Frameworks: React, Next.js, FastAPI.
+AI and Automation: OpenAI API, AI Agents SDK, LangGraph, Vercel AI SDK, OpenClaw, Hermes, n8n, Make, workflow automation, AI agents, webhooks, APIs.
+Tools: GitHub, Vercel, Power BI, Pandas, Excel, Google Ads, Shopify, Jira.
+
+BUSINESS SKILLS
+
+GTM strategy, sales automation, customer discovery, user interviews, MVP validation, startup pitching, product strategy, business development, lead generation, sales enablement, conversion optimization, SEO, market research, customer acquisition, founder-led sales, B2B sales, product-led growth, zero-to-one execution.
+
+TARGET ROLES
+
+Forward Deployed Engineer.
+Forward Deployed AI Engineer.
+AI Deployment Engineer.
+AI Product Engineer.
+Founding Engineer.
+Founding AI Engineer.
+Technical Founder Associate.
+Technical GTM Engineer.
+Growth Engineer.
+Solutions Engineer.
+AI Solutions Engineer.
+AI Automation Engineer.
+Product Engineer.
+Startup Operator.
+Founder in Residence.
+Entrepreneur in Residence.
+
+EXPERIENCE
+
+Co-founder, MedCase.
+AI-powered clinical simulator concept for clinical training workflows.
+
+Sales Representative, Philip Morris International.
+Customer-facing sales, needs assessment, product positioning, relationship management, and commercial execution.
+
+Website and E-commerce Management, CC Board Center.
+Website operations, e-commerce, SEO, digital marketing, campaigns, and conversion optimization.
+
+PROJECTS
+
+SkyBlaze - AI Fire Prevention.
+AI wildfire-risk initiative combining project coordination, strategy, and MVP execution support.
+
+AI Insurance Voice Agent.
+Hackathon prototype for insurance-oriented conversational automation.
+
+Personal CFO Assistant.
+Hackathon prototype for personal finance AI assistant workflows.
+
+AI Agents and Workflow Automation.
+Builds AI agents, workflow automations, browser tools, internal tools, and API-powered products for business workflows.
+
+EDUCATION
+
+B.Sc. Computer Science and Business Management, ISCTE - Lisbon University.
+
+LANGUAGES
+
+Portuguese native.
+English fluent.
+Spanish basic.
+German actively learning.

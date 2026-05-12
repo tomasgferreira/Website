@@ -55,6 +55,11 @@ body {
     max-width: 100vw;
 }
 
+.hero-tagline {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
 @media (max-width: 600px) {
     .main-title {
         max-width: 90vw;
@@ -216,6 +221,10 @@ body {
 
 .terminal-body {
     padding: 2rem;
+}
+
+.contact-intro {
+    margin: 0 0 1.5rem 0;
 }
 
 /* Form Styles */

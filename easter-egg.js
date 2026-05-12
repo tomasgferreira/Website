@@ -6,7 +6,10 @@
     var GLITCH_DURATION_MS = 800;
     var MOBILE_BREAKPOINT = 768;
     var TOTAL_LAPS = 3;
+    var LEADERBOARD_VISIBLE_MS = 7000;
+    var INTRO_VISIBLE_MS = 2200;
     var SUPABASE_CDN_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    var CAR_SPRITE_PATH = 'assets/porsche_easter.png';
 
     // Supabase project URL.
     var SUPABASE_URL = 'https://ggfnshrqqdbwemzxorsq.supabase.co';
@@ -14,10 +17,10 @@
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnZm5zaHJxcWRid2VtenhvcnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTkzMzksImV4cCI6MjA5NDE3NTMzOX0.7UR0-4N5OpPwyXmR5MDWBn3J0qRmgynlEt-MDaJkXB4';
 
     var TRACK_WAYPOINTS = [
-        [0.15, 0.15], [0.50, 0.10], [0.85, 0.15],
-        [0.90, 0.40], [0.85, 0.70], [0.65, 0.85],
-        [0.50, 0.88], [0.35, 0.85], [0.15, 0.70],
-        [0.10, 0.40], [0.15, 0.15]
+        [0.08, 0.30], [0.18, 0.20], [0.35, 0.16], [0.50, 0.24],
+        [0.62, 0.16], [0.79, 0.17], [0.92, 0.27], [0.90, 0.47],
+        [0.84, 0.65], [0.70, 0.78], [0.50, 0.84], [0.33, 0.80],
+        [0.22, 0.66], [0.14, 0.56], [0.09, 0.46], [0.08, 0.30]
     ];
 
     var CAR_PATTERN = [
@@ -141,6 +144,8 @@
         var supabaseClient = null;
         var supabaseLoaded = false;
         var lastFrameTs = 0;
+        var carSpriteCanvas = null;
+        var iconGhosts = [];
 
         var state = {
             phase: 'idle',
@@ -154,6 +159,7 @@
             raceStarted: false,
             raceStartTs: 0,
             lapStartTs: 0,
+            introStartTs: 0,
             countdownStartTs: 0,
             nearestTrackIndex: 0,
             prevTrackIndex: 0,
@@ -185,12 +191,15 @@
             resizeCanvas();
             buildTrack();
             resetCar();
+            loadCarSprite();
+            captureIconGhosts();
 
             var onResize = function () {
                 resizeCanvas();
                 var oldIndex = state.nearestTrackIndex;
                 buildTrack();
                 snapCarToTrack(oldIndex);
+                captureIconGhosts();
             };
 
             var onPointerDown = function () {
@@ -258,10 +267,10 @@
         }
 
         function start() {
-            state.phase = 'countdown';
+            state.phase = 'intro';
             state.running = true;
-            state.countdownStartTs = performance.now();
-            lastFrameTs = state.countdownStartTs;
+            state.introStartTs = performance.now();
+            lastFrameTs = state.introStartTs;
             rafId = requestAnimationFrame(loop);
         }
 
@@ -276,7 +285,9 @@
             }
             lastFrameTs = ts;
 
-            if (state.phase === 'countdown') {
+            if (state.phase === 'intro') {
+                updateIntro(ts);
+            } else if (state.phase === 'countdown') {
                 updateCountdown(ts);
             } else if (state.phase === 'racing') {
                 updateRacing(ts, dt);
@@ -290,6 +301,14 @@
             var elapsed = ts - state.countdownStartTs;
             if (elapsed >= 4000) {
                 state.phase = 'racing';
+            }
+        }
+
+        function updateIntro(ts) {
+            var elapsed = ts - state.introStartTs;
+            if (elapsed >= INTRO_VISIBLE_MS) {
+                state.phase = 'countdown';
+                state.countdownStartTs = ts;
             }
         }
 
@@ -440,7 +459,7 @@
             nameInput.type = 'text';
             nameInput.maxLength = 12;
             nameInput.className = 'ee-name-input';
-            nameInput.placeholder = 'TYPE NAME AND PRESS ENTER';
+            nameInput.placeholder = 'TYPE NAME + ENTER';
             nameInput.autocomplete = 'off';
             nameInput.spellcheck = false;
 
@@ -490,7 +509,7 @@
 
             addTimer(setTimeout(function () {
                 queueExit();
-            }, 5000));
+            }, LEADERBOARD_VISIBLE_MS));
         }
 
         async function submitLeaderboardRow() {
@@ -611,7 +630,9 @@
             drawMiniMap();
             drawStatusFlashes(ts);
 
-            if (state.phase === 'countdown') {
+            if (state.phase === 'intro') {
+                drawIntroPopup();
+            } else if (state.phase === 'countdown') {
                 drawCountdown(ts);
             }
 
@@ -640,12 +661,12 @@
             renderFinalScreen();
             drawText(
                 'ENTER YOUR NAME:',
-                canvas.width / 2 - 170,
-                canvas.height * 0.58,
-                14,
-                COLORS.green
+                canvas.width / 2 - 230,
+                canvas.height * 0.62,
+                16,
+                '#8bff8b'
             );
-            drawText('> _', canvas.width / 2 - 170, canvas.height * 0.64, 12, COLORS.green);
+            drawText('> ', canvas.width / 2 - 230, canvas.height * 0.68, 14, COLORS.green);
         }
 
         function renderLoadingScreen() {
@@ -728,19 +749,20 @@
         }
 
         function drawGhostIcons() {
-            var marginX = canvas.width * 0.13;
-            var spacingX = (canvas.width - marginX * 2) / 5;
-            var topY = canvas.height * 0.30;
-            var bottomY = canvas.height * 0.58;
-            var size = clamp(canvas.width / 20, 26, 58);
+            if (!iconGhosts.length) {
+                return;
+            }
             ctx.save();
-            ctx.globalAlpha = 0.15;
-            ctx.strokeStyle = COLORS.green;
-            ctx.lineWidth = 1;
-            for (var i = 0; i < 6; i++) {
-                var x = marginX + spacingX * i - size / 2;
-                ctx.strokeRect(x, topY - size / 2, size, size);
-                ctx.strokeRect(x, bottomY - size / 2, size, size);
+            ctx.globalAlpha = 0.14;
+            for (var i = 0; i < iconGhosts.length; i++) {
+                var g = iconGhosts[i];
+                if (g.img && g.ready) {
+                    ctx.drawImage(g.img, g.x, g.y, g.w, g.h);
+                } else {
+                    ctx.strokeStyle = COLORS.green;
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(g.x, g.y, g.w, g.h);
+                }
             }
             ctx.restore();
         }
@@ -876,14 +898,30 @@
             ctx.fill();
             ctx.restore();
 
-            var pixel = 4;
-            var rows = CAR_PATTERN.length;
-            var cols = CAR_PATTERN[0].length;
-
             ctx.save();
             ctx.translate(car.x, car.y);
             ctx.rotate(car.angle);
+            if (carSpriteCanvas) {
+                var spriteW = clamp(canvas.width * 0.028, 26, 48);
+                var spriteH = spriteW * (carSpriteCanvas.height / carSpriteCanvas.width);
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(
+                    carSpriteCanvas,
+                    -spriteW / 2,
+                    -spriteH / 2,
+                    spriteW,
+                    spriteH
+                );
+            } else {
+                drawFallbackPixelCar();
+            }
+            ctx.restore();
+        }
 
+        function drawFallbackPixelCar() {
+            var pixel = 4;
+            var rows = CAR_PATTERN.length;
+            var cols = CAR_PATTERN[0].length;
             for (var y = 0; y < rows; y++) {
                 for (var x = 0; x < cols; x++) {
                     var cell = CAR_PATTERN[y][x];
@@ -905,7 +943,6 @@
                     );
                 }
             }
-            ctx.restore();
         }
 
         function drawHud(ts) {
@@ -938,28 +975,31 @@
         }
 
         function drawMiniMap() {
-            var size = 100;
+            var width = 118;
+            var height = 66;
             var pad = 18;
-            var boxX = canvas.width - size - pad;
-            var boxY = canvas.height - size - 42;
+            var boxX = canvas.width - width - pad;
+            var boxY = canvas.height - height - 42;
             var track = state.track;
 
             ctx.save();
             ctx.strokeStyle = COLORS.green;
             ctx.lineWidth = 1;
-            ctx.strokeRect(boxX, boxY, size, size);
+            ctx.strokeRect(boxX, boxY, width, height);
 
             var minX = track.bounds.minX;
             var minY = track.bounds.minY;
             var spanX = Math.max(1, track.bounds.maxX - minX);
             var spanY = Math.max(1, track.bounds.maxY - minY);
-            var scale = Math.min((size - 12) / spanX, (size - 12) / spanY);
+            var scale = Math.min((width - 10) / spanX, (height - 10) / spanY);
+            var offsetX = boxX + (width - spanX * scale) / 2;
+            var offsetY = boxY + (height - spanY * scale) / 2;
 
             ctx.beginPath();
             for (var i = 0; i < track.points.length; i++) {
                 var p = track.points[i];
-                var mx = boxX + 6 + (p.x - minX) * scale;
-                var my = boxY + 6 + (p.y - minY) * scale;
+                var mx = offsetX + (p.x - minX) * scale;
+                var my = offsetY + (p.y - minY) * scale;
                 if (i === 0) {
                     ctx.moveTo(mx, my);
                 } else {
@@ -970,11 +1010,21 @@
             ctx.strokeStyle = 'rgba(0,255,0,0.7)';
             ctx.stroke();
 
-            var carX = boxX + 6 + (state.car.x - minX) * scale;
-            var carY = boxY + 6 + (state.car.y - minY) * scale;
+            var carX = offsetX + (state.car.x - minX) * scale;
+            var carY = offsetY + (state.car.y - minY) * scale;
             ctx.fillStyle = COLORS.green;
             ctx.fillRect(carX - 2, carY - 2, 4, 4);
             ctx.restore();
+        }
+
+        function drawIntroPopup() {
+            drawCenteredPanel([
+                'RACE RULES',
+                '',
+                '3 LAPS TO FINISH',
+                'ARROWS OR WASD TO DRIVE',
+                'ESC TO EXIT'
+            ], canvas.width * 0.5);
         }
 
         function drawStatusFlashes(ts) {
@@ -1130,13 +1180,135 @@
             canvas.height = window.innerHeight;
         }
 
+        function loadCarSprite() {
+            var img = new Image();
+            img.onload = function () {
+                try {
+                    carSpriteCanvas = cleanSpriteBackground(img);
+                } catch (err) {
+                    console.warn('[EasterEgg] Failed to process car sprite:', err);
+                    carSpriteCanvas = null;
+                }
+            };
+            img.onerror = function () {
+                console.warn('[EasterEgg] Car sprite failed to load, using fallback.');
+                carSpriteCanvas = null;
+            };
+            img.src = CAR_SPRITE_PATH;
+        }
+
+        function cleanSpriteBackground(img) {
+            var temp = document.createElement('canvas');
+            temp.width = img.width;
+            temp.height = img.height;
+            var tctx = temp.getContext('2d');
+            tctx.drawImage(img, 0, 0);
+            var imageData = tctx.getImageData(0, 0, temp.width, temp.height);
+            var data = imageData.data;
+
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+                if (r > 225 && g > 225 && b > 225) {
+                    data[i + 3] = 0;
+                }
+            }
+
+            tctx.putImageData(imageData, 0, 0);
+
+            // Trim transparent margins to keep the sprite compact.
+            var bounds = findOpaqueBounds(data, temp.width, temp.height);
+            if (!bounds) {
+                return temp;
+            }
+            var cropped = document.createElement('canvas');
+            cropped.width = bounds.w;
+            cropped.height = bounds.h;
+            var cctx = cropped.getContext('2d');
+            cctx.drawImage(
+                temp,
+                bounds.x,
+                bounds.y,
+                bounds.w,
+                bounds.h,
+                0,
+                0,
+                bounds.w,
+                bounds.h
+            );
+            return cropped;
+        }
+
+        function findOpaqueBounds(data, width, height) {
+            var minX = width;
+            var minY = height;
+            var maxX = -1;
+            var maxY = -1;
+            for (var y = 0; y < height; y++) {
+                for (var x = 0; x < width; x++) {
+                    var a = data[(y * width + x) * 4 + 3];
+                    if (a > 0) {
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+            if (maxX < minX || maxY < minY) {
+                return null;
+            }
+            return {
+                x: minX,
+                y: minY,
+                w: (maxX - minX) + 1,
+                h: (maxY - minY) + 1
+            };
+        }
+
+        function captureIconGhosts() {
+            iconGhosts = [];
+            var icons = document.querySelectorAll('.scattered-icons .icon img');
+            for (var i = 0; i < icons.length; i++) {
+                var icon = icons[i];
+                var rect = icon.getBoundingClientRect();
+                if (!rect.width || !rect.height) {
+                    continue;
+                }
+                var ghost = {
+                    x: rect.left,
+                    y: rect.top,
+                    w: rect.width,
+                    h: rect.height,
+                    ready: false,
+                    img: null
+                };
+
+                var clone = new Image();
+                clone.onload = (function (g, imageRef) {
+                    return function () {
+                        g.ready = true;
+                        g.img = imageRef;
+                    };
+                }(ghost, clone));
+                clone.onerror = (function (g) {
+                    return function () {
+                        g.ready = false;
+                    };
+                }(ghost));
+                clone.src = icon.currentSrc || icon.src;
+                iconGhosts.push(ghost);
+            }
+        }
+
         function buildTrack() {
             var width = canvas.width;
             var height = canvas.height;
             var points = generateTrackPoints(width, height, 320);
             var tangents = computeTangents(points);
             var bounds = computeBounds(points);
-            var trackWidth = clamp(width * (80 / 1920), 44, 120);
+            var trackWidth = clamp(width * (90 / 1920), 50, 132);
             state.track = {
                 points: points,
                 tangents: tangents,

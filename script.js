@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconContent = {
         education: {
             title: "Education",
-            text: "Bachelor in Computer Science and Business Management at ISCTE\n\nDid a sprint at Unicorn Factory, pitched ideas faster than you can say startup\n\nCertificate in a course AI for Product & Automation by Code for All"
+            text: "Computer Science and Business Management at ISCTE\n\nAI for Product & Automation at Code for All\n\nStartup sprint at Unicorn Factory\n\nAlways learning a new angle\n\nI like the space between code, product, and business"
         },
         ideas: {
             title: "Ideas & Innovation",
-            text: "Ship the v0 before breakfast, fix it by lunch\n\nIf your idea sounds crazy, I probably like it"
+            text: "I like launching fast\n\nBuild a v0\nShow it to people\nGet punched by reality\nImprove it\n\nI also like ideas that sound a little crazy at first"
         },
         communication: {
             title: "Communication",
@@ -17,31 +17,31 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         global: {
             title: "Vacation Overdrive",
-            text: "Exploring > Relaxing. I usually need vacations after my vacations\n\nTraveling to find cool stories (and even cooler cars)\n\nWeird museums and mind-bending exhibits? Count me in"
+            text: "Exploring > Relaxing. I usually need vacations after my vacations\n\nStories. Cars. Museums. Strange places.\nThe stuff that makes a trip worth remembering\n\nA good trip gives me memories\nA great one gives me ideas"
         },
         work: {
             title: "Doing Cool Stuff & Getting Paid or Professional Problem Solver",
-            text: "Boosted e-commerce sites from obscurity to top SEO rankings\n\nSolid sales experience at PMI\n\nEvent promotions for dozens of brands\n\nSold products, pitched ideas and nailed presentations. Sleep? Overrated"
+            text: "I've worked where product meets people\n\nMedCase and SkyBlaze taught me how to turn rough ideas into working products\n\nSales at PMI taught me how to pitch, listen and handle objections in the real world\n\nE-commerce taught me traffic, conversion, SEO and positioning\n\nI like the overlap: build the thing, explain the thing and get people to care"
         },
         tech: {
             title: "Technology (Currently teaching tiny AIs to book flights, chase leads, and remind me to surf.)",
-            text: "Java, Python, SQL, MongoDB — I'll dive into technical stuff when needed\n\nHTML, CSS, Power BI, Google Ads? All part of the toolkit, zero fear factor.\n\nCurrently wiring up AIs and automations so my future self can delegate to… my other future self"
+            text: "Building with AI, agents, automations, and APIs\n\nPython, TypeScript, Java, SQL, PostgreSQL, MongoDB\nReact, Next.js, FastAPI, Supabase and Vercel\n\nOpenAI API, Agents SDK, LangGraph, Vercel AI SDK, n8n and no-code tools\n\nI like tools that do things\nNot dashboards that just look pretty\n\nThe stack is flexible\nThe output is the point"
         },
         fitness: {
             title: "Fitness & Health",
-            text: "Surfing, hoops, cycling, calisthenics — I'm not picky, just active\n\nConstantly adding new ways to stay active"
+            text: "Surfing, hoops, cycling, calisthenics, I'm not picky, just active\n\nConstantly adding new ways to stay active"
         },
         chat: {
             title: "Lost in Translation",
-            text: "Portuguese native, English fluent, Spanish enough to survive\n\n1000+ days on Duolingo: German and Italian loading…\n\nBasically, I can order food anywhere (priority skills)"
+            text: "Portuguese native, English fluent, Spanish enough to survive\n\n1000+ days on Duolingo: German and Italian loading...\n\nBasically, I can order food anywhere (priority skills)"
         },
         voice: {
             title: "Voice & Audio",
-            text: "Favorite listens: My First Million, Modern Wisdom, The AI daily brief, Founders\n\nPodcasts at 2x speed; in normal speech they sound stoned now."
+            text: "Hearing Diet\n\nI listen to a lot of podcasts\n\nMy First Million\nModern Wisdom\nThe AI Daily Brief\nBecoming The Main character\nStarter Story\n\nUsually at 2x speed\nEfficient or mildly concerning. Not sure yet"
         },
         progress: {
             title: "Progress Tracking",
-            text: "Passionate about tackling interesting challenges\n\nI like to learn directly from people who've done interesting, real-world things\n\nMy north star is to immerse in meaningful ventures that can challenge me to scale faster\n\nI'm a work in progress, like you"
+            text: "I like being a beginner at hard things\n\nIt keeps the ego under control\n\nI learn from people with more reps than me\nBuilders. Operators. Founders. Customers.\n\nI'm a work in progress\nLike you"
         },
         innovation: {
             title: "Innovation",
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         knowledge: {
             title: "Bookshelf",
-            text: "Currently reading:\n\n- Discipline Is Destiny - Ryan Holiday\n\nBooks = brain food. Currently overeating"
+            text: "Currently reading: The Four Agreements\n\nBooks are brain food.\n\nLearn from someone else's mistakes\nIt's cheaper"
         }
     };
 
@@ -132,6 +132,24 @@ document.addEventListener('DOMContentLoaded', () => {
         modalText.innerHTML = `${linkedText}<br><br><button type="button" class="contact-scroll-btn">Click here to contact me</button>`;
     }
 
+    function enhanceProgressContent(modalText) {
+        const linkedText = modalText.innerHTML
+            .replace(
+                'Snip to AI',
+                '<a href="https://chromewebstore.google.com/detail/snip-to-ai/ecljdeddnnbegaogeejliopbnknjbikp?hl=pt-PT&utm_source=ext_sidebar" target="_blank" rel="noopener noreferrer">Snip to AI</a>'
+            )
+            .replace(
+                'usemute.com',
+                '<a href="https://usemute.com" target="_blank" rel="noopener noreferrer">usemute.com</a>'
+            )
+            .replace(
+                'medcase.pt',
+                '<a href="https://medcase.pt" target="_blank" rel="noopener noreferrer">medcase.pt</a>'
+            );
+
+        modalText.innerHTML = linkedText;
+    }
+
     // Handle all clickable elements
     document.addEventListener('click', async (e) => {
         const contactButton = e.target.closest('.contact-scroll-btn');
@@ -171,7 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalTitle = modal.querySelector('.modal-title');
             modalTitle.textContent = "What's in Progress";
             modal.style.display = 'block';
-            await typeText(modalText, "Currently working on:\n\n- Challenging myself to test 8 ideas in 8 weeks\n\n- Closing deals at PMI\n\n- Exploring AI and automation");
+            await typeText(modalText, "Software engineering at NTT DATA\n\nBuilding useful tools like Snip to AI\n\nHelp you being conscious of your time with mute. (usemute.com)\n\nCo-Founder & CEO at MedCase (medcase.pt) (UFL startup)\n\nTeaching AI and automation to executives");
+            enhanceProgressContent(modalText);
         }
     });
 
@@ -222,6 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                const successMessage = 'Message sent. The terminal did its thing.';
+                const notificationMessage = document.querySelector('#form-notification .notification-message');
+                notificationMessage.textContent = successMessage;
+
                 // Send auto-response email
                 try {
                     const emailResponse = await emailjs.send(
@@ -275,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     notification.style.display = 'none';
                     notification.style.animation = '';
-                    message.textContent = 'Message sent successfully!'; // Reset message
+                    message.textContent = 'Message sent. The terminal did its thing.'; // Reset message
                 }, 500);
             }, 3000);
         }
