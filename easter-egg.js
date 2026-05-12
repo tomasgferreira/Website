@@ -181,7 +181,7 @@
             lapProgressForward: 0,
             lapArmed: false,
             prevGateSignedDistance: null,
-            gateHomeSide: 0,
+            lapCooldownUntil: 0,
             wrongWayMs: 0,
             wrongWayFlashUntil: 0,
             offTrackFlashUntil: 0,
@@ -400,14 +400,14 @@
                 state.lapStartTs = ts;
                 state.lapArmed = false;
                 state.lapProgressForward = 0;
+                state.lapCooldownUntil = 0;
 
-                // Capture the initial side of the start/finish line at race start.
+                // Seed signed-distance history for robust frame-to-frame gate crossing.
                 var startPoint = state.track.points[0];
                 var startTangent = state.track.tangents[0];
                 var startNormalX = -startTangent.y;
                 var startNormalY = startTangent.x;
                 var signed = (car.x - startPoint.x) * startNormalX + (car.y - startPoint.y) * startNormalY;
-                state.gateHomeSide = signed >= 0 ? 1 : -1;
                 state.prevGateSignedDistance = signed;
             }
 
@@ -450,18 +450,16 @@
                 (state.car.x - startPoint.x) * startNormalX +
                 (state.car.y - startPoint.y) * startNormalY;
 
-            if (distToStart > track.trackWidth * 0.8) {
+            if (distToStart > track.trackWidth * 0.88) {
                 state.lapArmed = true;
             }
 
-            var crossedGateFromExpectedSide = false;
+            var crossedGateLine = false;
             if (state.prevGateSignedDistance !== null) {
-                var prevSide = state.prevGateSignedDistance >= 0 ? 1 : -1;
-                var currentSide = currentGateSignedDistance >= 0 ? 1 : -1;
-                crossedGateFromExpectedSide =
-                    prevSide !== currentSide &&
-                    currentSide === state.gateHomeSide &&
-                    Math.abs(currentGateSignedDistance) > 1.5;
+                crossedGateLine =
+                    ((state.prevGateSignedDistance < 0 && currentGateSignedDistance >= 0) ||
+                    (state.prevGateSignedDistance > 0 && currentGateSignedDistance <= 0)) &&
+                    Math.abs(state.prevGateSignedDistance - currentGateSignedDistance) > 2;
             }
             state.prevGateSignedDistance = currentGateSignedDistance;
 
@@ -473,10 +471,11 @@
             if (
                 state.lapArmed &&
                 isNearGate &&
-                crossedGateFromExpectedSide &&
+                crossedGateLine &&
                 directionDot > 0.2 &&
                 enoughProgress &&
-                enoughTime
+                enoughTime &&
+                ts >= state.lapCooldownUntil
             ) {
                 state.currentLap += 1;
                 var split = ts - state.lapStartTs;
@@ -484,6 +483,7 @@
                 state.lapStartTs = ts;
                 state.lapArmed = false;
                 state.lapProgressForward = 0;
+                state.lapCooldownUntil = ts + 650;
 
                 if (state.currentLap >= TOTAL_LAPS) {
                     finishRace(ts);
@@ -1422,7 +1422,7 @@
             state.raceStarted = false;
             state.lapArmed = false;
             state.prevGateSignedDistance = null;
-            state.gateHomeSide = 0;
+            state.lapCooldownUntil = 0;
             state.particles = [];
         }
 
