@@ -181,6 +181,7 @@
             lapProgressForward: 0,
             lapArmed: false,
             prevGateSignedDistance: null,
+            gateHomeSide: 0,
             wrongWayMs: 0,
             wrongWayFlashUntil: 0,
             offTrackFlashUntil: 0,
@@ -398,6 +399,16 @@
                 state.raceStartTs = ts;
                 state.lapStartTs = ts;
                 state.lapArmed = false;
+                state.lapProgressForward = 0;
+
+                // Capture the initial side of the start/finish line at race start.
+                var startPoint = state.track.points[0];
+                var startTangent = state.track.tangents[0];
+                var startNormalX = -startTangent.y;
+                var startNormalY = startTangent.x;
+                var signed = (car.x - startPoint.x) * startNormalX + (car.y - startPoint.y) * startNormalY;
+                state.gateHomeSide = signed >= 0 ? 1 : -1;
+                state.prevGateSignedDistance = signed;
             }
 
             if (state.raceStarted) {
@@ -445,9 +456,12 @@
 
             var crossedGateFromExpectedSide = false;
             if (state.prevGateSignedDistance !== null) {
+                var prevSide = state.prevGateSignedDistance >= 0 ? 1 : -1;
+                var currentSide = currentGateSignedDistance >= 0 ? 1 : -1;
                 crossedGateFromExpectedSide =
-                    state.prevGateSignedDistance < -2 &&
-                    currentGateSignedDistance >= 2;
+                    prevSide !== currentSide &&
+                    currentSide === state.gateHomeSide &&
+                    Math.abs(currentGateSignedDistance) > 1.5;
             }
             state.prevGateSignedDistance = currentGateSignedDistance;
 
@@ -947,8 +961,10 @@
             ctx.translate(car.x, car.y);
             ctx.rotate(car.angle);
             if (carSpriteCanvas) {
-                var spriteW = clamp(canvas.width * 0.028, 26, 48);
-                var spriteH = spriteW * (carSpriteCanvas.height / carSpriteCanvas.width);
+                var baseW = clamp(canvas.width * 0.028, 26, 48);
+                var baseH = baseW * (carSpriteCanvas.height / carSpriteCanvas.width);
+                var spriteW = baseW * 1.14;
+                var spriteH = baseH * 0.80;
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(
                     carSpriteCanvas,
@@ -1257,6 +1273,25 @@
                 var b = data[i + 2];
                 if (r > 225 && g > 225 && b > 225) {
                     data[i + 3] = 0;
+                    continue;
+                }
+
+                // Recolor vivid greens into a white/silver body palette.
+                if (g > 150 && g > r * 1.15 && g > b * 1.15) {
+                    var bright = clamp((r + g + b) / 3, 0, 255);
+                    if (bright > 170) {
+                        data[i] = 236;
+                        data[i + 1] = 236;
+                        data[i + 2] = 238;
+                    } else if (bright > 110) {
+                        data[i] = 196;
+                        data[i + 1] = 198;
+                        data[i + 2] = 203;
+                    } else {
+                        data[i] = 122;
+                        data[i + 1] = 125;
+                        data[i + 2] = 132;
+                    }
                 }
             }
 
@@ -1387,6 +1422,7 @@
             state.raceStarted = false;
             state.lapArmed = false;
             state.prevGateSignedDistance = null;
+            state.gateHomeSide = 0;
             state.particles = [];
         }
 
