@@ -181,6 +181,9 @@
             lapProgressForward: 0,
             lapArmed: false,
             prevGateSignedDistance: null,
+            prevCarX: 0,
+            prevCarY: 0,
+            gateCrossSeenAt: 0,
             lapCooldownUntil: 0,
             wrongWayMs: 0,
             wrongWayFlashUntil: 0,
@@ -401,6 +404,9 @@
                 state.lapArmed = false;
                 state.lapProgressForward = 0;
                 state.lapCooldownUntil = 0;
+                state.gateCrossSeenAt = 0;
+                state.prevCarX = car.x;
+                state.prevCarY = car.y;
 
                 // Seed signed-distance history for robust frame-to-frame gate crossing.
                 var startPoint = state.track.points[0];
@@ -449,21 +455,31 @@
             var currentGateSignedDistance =
                 (state.car.x - startPoint.x) * startNormalX +
                 (state.car.y - startPoint.y) * startNormalY;
+            var prevGateSignedDistance =
+                (state.prevCarX - startPoint.x) * startNormalX +
+                (state.prevCarY - startPoint.y) * startNormalY;
 
             if (distToStart > track.trackWidth * 0.88) {
                 state.lapArmed = true;
             }
 
             var crossedGateLine = false;
-            if (state.prevGateSignedDistance !== null) {
+            if (state.prevGateSignedDistance !== null || state.raceStarted) {
                 crossedGateLine =
-                    ((state.prevGateSignedDistance < 0 && currentGateSignedDistance >= 0) ||
-                    (state.prevGateSignedDistance > 0 && currentGateSignedDistance <= 0)) &&
-                    Math.abs(state.prevGateSignedDistance - currentGateSignedDistance) > 2;
+                    ((prevGateSignedDistance < 0 && currentGateSignedDistance >= 0) ||
+                    (prevGateSignedDistance > 0 && currentGateSignedDistance <= 0)) &&
+                    Math.abs(prevGateSignedDistance - currentGateSignedDistance) > 1.2;
             }
             state.prevGateSignedDistance = currentGateSignedDistance;
+            state.prevCarX = state.car.x;
+            state.prevCarY = state.car.y;
+
+            if (crossedGateLine) {
+                state.gateCrossSeenAt = ts;
+            }
 
             var isNearGate = distToStart <= gateDistance;
+            var crossingWindowActive = (ts - state.gateCrossSeenAt) <= 250;
             var minProgress = track.points.length * MIN_LAP_PROGRESS_RATIO;
             var enoughProgress = state.lapProgressForward >= minProgress;
             var enoughTime = (ts - state.lapStartTs) >= MIN_LAP_MS;
@@ -471,8 +487,8 @@
             if (
                 state.lapArmed &&
                 isNearGate &&
-                crossedGateLine &&
-                directionDot > 0.2 &&
+                crossingWindowActive &&
+                directionDot > 0.12 &&
                 enoughProgress &&
                 enoughTime &&
                 ts >= state.lapCooldownUntil
@@ -483,6 +499,7 @@
                 state.lapStartTs = ts;
                 state.lapArmed = false;
                 state.lapProgressForward = 0;
+                state.gateCrossSeenAt = 0;
                 state.lapCooldownUntil = ts + 650;
 
                 if (state.currentLap >= TOTAL_LAPS) {
@@ -1422,6 +1439,9 @@
             state.raceStarted = false;
             state.lapArmed = false;
             state.prevGateSignedDistance = null;
+            state.prevCarX = state.car.x;
+            state.prevCarY = state.car.y;
+            state.gateCrossSeenAt = 0;
             state.lapCooldownUntil = 0;
             state.particles = [];
         }
