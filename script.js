@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         fitness: {
             title: "Fitness & Health",
-            text: "Surfing, hoops, cycling, calisthenics, I'm not picky, just active\n\nConstantly adding new ways to stay active"
+            text: "Surfing, hoops, cycling, calisthenics, I'm not picky, just active\n\nI can plank for more than 8 minutes, don't ask me why...\n\nConstantly adding new ways to stay active"
         },
         chat: {
             title: "Lost in Translation",
