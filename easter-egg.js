@@ -411,9 +411,9 @@
                 // Seed signed-distance history for robust frame-to-frame gate crossing.
                 var startPoint = state.track.points[0];
                 var startTangent = state.track.tangents[0];
-                var startNormalX = -startTangent.y;
-                var startNormalY = startTangent.x;
-                var signed = (car.x - startPoint.x) * startNormalX + (car.y - startPoint.y) * startNormalY;
+                var signed =
+                    (car.x - startPoint.x) * startTangent.x +
+                    (car.y - startPoint.y) * startTangent.y;
                 state.prevGateSignedDistance = signed;
             }
 
@@ -450,12 +450,18 @@
             var startTangent = track.tangents[0];
             var startNormalX = -startTangent.y;
             var startNormalY = startTangent.x;
-            var gateDistance = clamp(canvas.width / 1920 * 40, 26, 62);
             var distToStart = distance(state.car.x, state.car.y, startPoint.x, startPoint.y);
+            var gateHalfWidth = track.trackWidth / 2;
             var currentGateSignedDistance =
+                (state.car.x - startPoint.x) * startTangent.x +
+                (state.car.y - startPoint.y) * startTangent.y;
+            var prevGateSignedDistance =
+                (state.prevCarX - startPoint.x) * startTangent.x +
+                (state.prevCarY - startPoint.y) * startTangent.y;
+            var currentGateOffset =
                 (state.car.x - startPoint.x) * startNormalX +
                 (state.car.y - startPoint.y) * startNormalY;
-            var prevGateSignedDistance =
+            var prevGateOffset =
                 (state.prevCarX - startPoint.x) * startNormalX +
                 (state.prevCarY - startPoint.y) * startNormalY;
 
@@ -475,18 +481,24 @@
             state.prevCarY = state.car.y;
 
             if (crossedGateLine) {
-                state.gateCrossSeenAt = ts;
+                var crossingRatio =
+                    Math.abs(prevGateSignedDistance) /
+                    (Math.abs(prevGateSignedDistance) + Math.abs(currentGateSignedDistance));
+                var crossingOffset =
+                    prevGateOffset +
+                    (currentGateOffset - prevGateOffset) * crossingRatio;
+                if (Math.abs(crossingOffset) <= gateHalfWidth) {
+                    state.gateCrossSeenAt = ts;
+                }
             }
 
-            var isNearGate = distToStart <= gateDistance;
-            var crossingWindowActive = (ts - state.gateCrossSeenAt) <= 250;
+            var crossingWindowActive = (ts - state.gateCrossSeenAt) <= 320;
             var minProgress = track.points.length * MIN_LAP_PROGRESS_RATIO;
             var enoughProgress = state.lapProgressForward >= minProgress;
             var enoughTime = (ts - state.lapStartTs) >= MIN_LAP_MS;
 
             if (
                 state.lapArmed &&
-                isNearGate &&
                 crossingWindowActive &&
                 directionDot > 0.12 &&
                 enoughProgress &&
