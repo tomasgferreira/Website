@@ -132,23 +132,27 @@ document.addEventListener('DOMContentLoaded', () => {
         modalText.innerHTML = `${linkedText}<br><br><button type="button" class="contact-scroll-btn">Click here to contact me</button>`;
     }
 
-    function enhanceProgressContent(modalText) {
-        const linkedText = modalText.innerHTML
-            .replace(
-                'Snip to AI',
-                '<a href="https://chromewebstore.google.com/detail/snip-to-ai/ecljdeddnnbegaogeejliopbnknjbikp?hl=pt-PT&utm_source=ext_sidebar" target="_blank" rel="noopener noreferrer">Snip to AI</a>'
-            )
-            .replace(
-                'usemute.com',
-                '<a href="https://usemute.com" target="_blank" rel="noopener noreferrer">usemute.com</a>'
-            )
-            .replace(
-                'medcase.pt',
-                '<a href="https://medcase.pt" target="_blank" rel="noopener noreferrer">medcase.pt</a>'
-            );
+  function enhanceProgressContent(modalText) {
+    const linkedText = modalText.innerHTML
+        .replace(
+            'Snip to AI',
+            '<a href="https://chromewebstore.google.com/detail/snip-to-ai/ecljdeddnnbegaogeejliopbnknjbikp?hl=pt-PT&utm_source=ext_sidebar" target="_blank" rel="noopener noreferrer">Snip to AI</a>'
+        )
+        .replace(
+            'IronGrowth',
+            '<a href="https://tomoconstrutor.github.io/IronGrowth/" target="_blank" rel="noopener noreferrer">IronGrowth</a>'
+        )
+        .replace(
+            'usemute.com',
+            '<a href="https://usemute.com" target="_blank" rel="noopener noreferrer">usemute.com</a>'
+        )
+        .replace(
+            'medcase.pt',
+            '<a href="https://medcase.pt" target="_blank" rel="noopener noreferrer">medcase.pt</a>'
+        );
 
-        modalText.innerHTML = linkedText;
-    }
+    modalText.innerHTML = linkedText;
+}
 
     // Handle all clickable elements
     document.addEventListener('click', async (e) => {
@@ -189,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalTitle = modal.querySelector('.modal-title');
             modalTitle.textContent = "What's in Progress";
             modal.style.display = 'block';
-            await typeText(modalText, "Software engineering at NTT DATA\n\nBuilding useful tools like Snip to AI\n\nHelp you being conscious of your time with mute. (usemute.com)\n\nCo-Founder & CEO at MedCase (medcase.pt) (UFL startup)\n\nTeaching AI and automation to executives");
+            await typeText(modalText, "Software engineering at NTT DATA\n\nBuilding useful tools like Snip to AI\n\nYou can follow my IronMan training here → IronGrowth\n\nCo-Founder & CEO at MedCase (medcase.pt) (UFL startup)");
             enhanceProgressContent(modalText);
         }
     });
